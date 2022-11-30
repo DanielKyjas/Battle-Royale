@@ -35,12 +35,23 @@ void imprimir(nodo* n)
         }
         if (n->suerte > n->next->suerte) {
                 n->power = rand() % 51;
-                if (n->power < 11) {
+                if (n->power < 11 && n->power > 8) {
                     std::cout << n->nombre << " Ha encontrado un artefacto magico, ahora su ataque se duplica\n";
                     n->ataque * 2;
                 }
-                n->next->vida = n->next->vida - n->ataque * (n->next->critico * .10);
+                if (n->power < 8 && n->power > 5) {
+                    std::cout << n->nombre << " Ha encontrado un artefacto magico, ahora su vida se duplica\n";
+                    n->vida * 2;
+                }
+                if (n->power < 5 && n->power > 2) {
+                    std::cout << n->nombre << " Ha encontrado un artefacto magico, ahora su ataque critico se duplica\n";
+                    n->critico * 2;
+                }
+                if (n->next->vida < 0) {
+                    n->next = n->next->next;
+                }
                 std::cout << n->nombre << " ataca a " << n->next->nombre << std::endl;
+                n->next->vida = n->next->vida - n->ataque * (n->next->critico * .10);
                 std::cout << "La vida de " << n->next->nombre << " es de " << n->next->vida << std::endl;
                 if (n->next->vida <= 0) {
                     std::cout << n->next->nombre << " ha sido eliminad@\n";
@@ -52,20 +63,19 @@ void imprimir(nodo* n)
                     std::cout << "La vida de " << n->nombre << " es de " << n->vida << std::endl;
                     if (n->vida <= 0) {
                         std::cout << n->nombre << " ha sido eliminad@\n";
-                        n->before->before->next = n->before->before->next->next;
+                        n = n->next->next;
                     }
-                }
-                if (n->nombre == n->next->nombre || n->nombre == n->before->nombre) {
-                    std::cout << n->nombre << " ha ganado";
-                    break;
                 }
         }
         n = n->next;
-    } while (n->vida != 0);
-    if (n->nombre == n->next->nombre || n->nombre == n->before->nombre) {
-        std::cout << n->nombre << " ha ganado";
-        
+    } while (n->vida );
+    if (n->vida <= 0) {
+        std::cout << n->next->nombre << " ha ganado" << std::endl;
     }
+    else {
+        std::cout << n->nombre << " ha ganado" << std::endl;
+    }
+
     }
 
 
@@ -296,4 +306,5 @@ int main()
     std::cout << "Los juegos del hambre comienzan\n";
     
         imprimir(Iker);
+
 }
